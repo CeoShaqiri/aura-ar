@@ -1,0 +1,854 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>%%SCENE%% â€” The Aura Standard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        :root {
+            --orange: #F28D52;
+            --blue: #BDD9F2;
+            --steel: #5A6B8C;
+            --navy: #071526;
+            --glass: rgba(13, 31, 53, .92);
+            --glass2: rgba(7, 15, 28, .98);
+            --border: rgba(189, 217, 242, .09);
+            --text: #F2F2F2;
+            --muted: rgba(242, 242, 242, .38);
+            --r: 14px;
+            --rs: 10px;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--navy);
+            background-image:
+                radial-gradient(ellipse 80% 55% at 50% -5%, rgba(242, 141, 82, .07) 0%, transparent 55%),
+                linear-gradient(rgba(242, 141, 82, .022) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(242, 141, 82, .022) 1px, transparent 1px);
+            background-size: 100% 100%, 90px 90px, 90px 90px;
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* â”€â”€ model-viewer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        model-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+            z-index: 0;
+            --progress-bar-color: transparent;
+            --progress-mask: transparent;
+        }
+
+        /* â”€â”€ LOADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #loader {
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            background: var(--navy);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            transition: opacity .7s ease;
+        }
+
+        #loader.out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* animated logo mark â€” two nested diamonds */
+        .l-logo {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .l-logo svg {
+            position: absolute;
+        }
+
+        .l-logo .outer {
+            width: 64px;
+            height: 64px;
+            animation: diamond-spin 8s linear infinite;
+        }
+
+        .l-logo .inner {
+            width: 40px;
+            height: 40px;
+            animation: diamond-spin 8s linear infinite reverse;
+        }
+
+        @keyframes diamond-spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* handwritten brand wordmark */
+        #l-wordmark {
+            font-family: 'Dancing Script', cursive;
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--orange) 0%, var(--blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: .01em;
+            line-height: 1;
+        }
+
+        #l-sub {
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: .28em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: -4px;
+        }
+
+        /* â”€â”€ TOP BAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9998;
+            padding: max(env(safe-area-inset-top), 14px) 18px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(to bottom, rgba(7, 21, 38, .95) 0%, transparent 100%);
+            transition: opacity .3s;
+            pointer-events: none;
+        }
+
+        #topbar.hidden {
+            opacity: 0;
+        }
+
+        /* nav logo lockup */
+        .t-diamond {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .t-wordmark {
+            font-family: 'Dancing Script', cursive;
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--orange) 0%, var(--blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            letter-spacing: .01em;
+        }
+
+        #t-scene {
+            margin-left: auto;
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--muted);
+            letter-spacing: .06em;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #tog {
+            margin-left: auto;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(189, 217, 242, .06);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: all;
+            transition: background .2s;
+        }
+
+        #tog:hover {
+            background: rgba(189, 217, 242, .13);
+        }
+
+        #tog svg {
+            width: 14px;
+            height: 14px;
+            stroke: rgba(242, 242, 242, .45);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* â”€â”€ BOTTOM PANEL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            isolation: isolate;
+            padding: 18px 16px calc(18px + env(safe-area-inset-bottom, 0px));
+            background: var(--glass);
+            backdrop-filter: blur(32px) saturate(1.5);
+            -webkit-backdrop-filter: blur(32px) saturate(1.5);
+            border-top: 1px solid var(--border);
+            box-shadow: 0 -1px 0 rgba(242, 141, 82, .15), inset 0 1px 0 rgba(189, 217, 242, .04);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform .38s cubic-bezier(.4, 0, .2, 1), opacity .28s;
+        }
+
+        #panel.hidden {
+            transform: translateY(112%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* primary CTA */
+        #btn-ar {
+            width: 100%;
+            padding: 16px 18px;
+            border: none;
+            border-radius: var(--r);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--navy);
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--orange) 0%, #e0793a 100%);
+            box-shadow: 0 0 0 1px rgba(242, 141, 82, .28), 0 8px 32px rgba(242, 141, 82, .20);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            transition: transform .15s, box-shadow .2s;
+        }
+
+        #btn-ar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, .15), transparent);
+            opacity: 0;
+            transition: opacity .2s;
+        }
+
+        #btn-ar:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 0 1px rgba(242, 141, 82, .45), 0 14px 40px rgba(242, 141, 82, .28);
+        }
+
+        #btn-ar:hover::after {
+            opacity: 1;
+        }
+
+        #btn-ar:active {
+            transform: scale(.98);
+        }
+
+        #btn-ar svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: var(--navy);
+            stroke-width: 2;
+            flex-shrink: 0;
+        }
+
+        #btn-ar .pulse {
+            position: absolute;
+            inset: -4px;
+            border-radius: calc(var(--r) + 4px);
+            border: 1px solid rgba(242, 141, 82, .45);
+            opacity: 0;
+            animation: pulse 2.8s ease-out infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: .5;
+            }
+
+            70% {
+                transform: scale(1.04);
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* secondary grid */
+        .sgrid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .sbtn {
+            padding: 12px 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--rs);
+            background: rgba(189, 217, 242, .04);
+            color: rgba(242, 242, 242, .55);
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: .08em;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            transition: background .2s, border-color .2s, color .2s, transform .15s;
+            white-space: nowrap;
+        }
+
+        .sbtn:hover {
+            background: rgba(189, 217, 242, .10);
+            border-color: rgba(189, 217, 242, .22);
+            color: var(--text);
+        }
+
+        .sbtn:active {
+            transform: scale(.94);
+        }
+
+        .sbtn svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: var(--orange);
+            stroke-width: 1.8;
+        }
+
+        /* â”€â”€ TOAST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #toast {
+            position: fixed;
+            top: 62px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--glass2);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 7px 20px;
+            font-size: 11.5px;
+            font-weight: 400;
+            letter-spacing: .04em;
+            color: rgba(242, 242, 242, .55);
+            z-index: 10000;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity .3s;
+            pointer-events: none;
+        }
+
+        #toast.show {
+            opacity: 1;
+        }
+
+        /* â”€â”€ QR MODAL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #qrbd {
+            position: fixed;
+            inset: 0;
+            z-index: 10001;
+            background: rgba(0, 0, 0, .62);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s;
+        }
+
+        #qrbd.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #qrm {
+            background: var(--glass2);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 24px 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            max-width: 300px;
+            width: 88%;
+            box-shadow: 0 -1px 0 rgba(242, 141, 82, .14), 0 40px 80px rgba(0, 0, 0, .6);
+            transform: scale(.92) translateY(14px);
+            transition: transform .32s cubic-bezier(.34, 1.56, .64, 1);
+        }
+
+        #qrbd.show #qrm {
+            transform: scale(1) translateY(0);
+        }
+
+        /* QR logo lockup */
+        .qr-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qr-logo svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .qr-wordmark {
+            font-family: 'Dancing Script', cursive;
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--orange), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        #qr-eyebrow {
+            font-size: 10px;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-align: center;
+            margin-top: -6px;
+        }
+
+        #qr-wrap {
+            background: #fff;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+        }
+
+        #qrm p {
+            font-size: 10px;
+            color: var(--steel);
+            text-align: center;
+            word-break: break-all;
+            line-height: 1.6;
+        }
+
+        #qr-copy {
+            width: 100%;
+            padding: 9px;
+            margin-bottom: 4px;
+            border: 1px solid var(--border);
+            border-radius: var(--rs);
+            background: rgba(189, 217, 242, .06);
+            color: rgba(242, 242, 242, .45);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: .06em;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+
+        #qr-copy:hover {
+            background: rgba(189, 217, 242, .13);
+            color: var(--text);
+        }
+
+        #qr-close {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: var(--rs);
+            background: linear-gradient(135deg, var(--orange) 0%, #e0793a 100%);
+            color: var(--navy);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: opacity .2s;
+        }
+
+        #qr-close:hover {
+            opacity: .88;
+        }
+
+        /* â”€â”€ FLASH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #flash {
+            position: fixed;
+            inset: 0;
+            z-index: 70;
+            background: #fff;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .08s;
+        }
+
+        /* â”€â”€ BRANDING STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        #branding {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9997;
+            padding: 5px 16px calc(5px + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(7, 21, 38, .70);
+            border-top: 1px solid rgba(189, 217, 242, .06);
+            pointer-events: none;
+        }
+
+        /* diamond bullet */
+        #branding::before {
+            content: 'â—†';
+            font-size: 6px;
+            color: var(--orange);
+            opacity: .5;
+        }
+
+        .b-wordmark {
+            font-family: 'Dancing Script', cursive;
+            font-size: 14px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--orange), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .b-sep {
+            font-size: 6px;
+            color: var(--orange);
+            opacity: .35;
+        }
+
+        .b-credit {
+            font-size: 10px;
+            font-weight: 400;
+            letter-spacing: .06em;
+            color: var(--muted);
+        }
+
+        #branding.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="l-logo">
+            <svg class="outer" viewBox="0 0 64 64" fill="none">
+                <polygon points="32,3 61,32 32,61 3,32" stroke="#F28D52" stroke-width="1.2"
+                    fill="rgba(242,141,82,0.06)" />
+            </svg>
+            <svg class="inner" viewBox="0 0 64 64" fill="none">
+                <polygon points="32,13 51,32 32,51 13,32" stroke="#BDD9F2" stroke-width="1"
+                    fill="rgba(189,217,242,0.04)" />
+            </svg>
+        </div>
+        <div id="l-wordmark">The Aura Standard</div>
+        <div id="l-sub">Preparing your experience</div>
+    </div>
+
+    <model-viewer id="mv" src="%%GLB_SRC%%" ar ar-modes="webxr scene-viewer quick-look" camera-controls
+        touch-action="pan-y" auto-rotate auto-rotate-delay="800" rotation-per-second="15deg" shadow-intensity="1.2"
+        shadow-softness="0.8" environment-image="neutral" exposure="1" bounds="tight" interpolation-decay="200">
+    </model-viewer>
+
+    <!-- TOP BAR -->
+    <div id="topbar">
+        <svg class="t-diamond" viewBox="0 0 28 28" fill="none">
+            <polygon points="14,2 26,14 14,26 2,14" stroke="#F28D52" stroke-width="1.2" fill="rgba(242,141,82,0.10)" />
+            <polygon points="14,8 20,14 14,20 8,14" stroke="#BDD9F2" stroke-width=".8" fill="rgba(189,217,242,0.05)" />
+        </svg>
+        <span class="t-wordmark">The Aura Standard</span>
+        <span id="t-scene">%%SCENE%%</span>
+        <button id="tog" title="Toggle panel" onclick="togglePanel()">
+            <svg viewBox="0 0 24 24">
+                <polyline id="tog-pts" points="18 15 12 9 6 15" />
+            </svg>
+        </button>
+    </div>
+
+    <div id="toast"></div>
+    <div id="flash"></div>
+
+    <!-- BOTTOM PANEL -->
+    <div id="panel">
+        <button id="btn-ar" onclick="launchAR()">
+            <div class="pulse"></div>
+            <svg viewBox="0 0 24 24">
+                <path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" />
+                <circle cx="12" cy="12" r="3.5" />
+            </svg>
+            View in Space
+        </button>
+        <div class="sgrid">
+            <button class="sbtn" onclick="capturePhoto()">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="13" r="4" />
+                    <path d="M9 3H5a2 2 0 00-2 2v12a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2h-4" />
+                    <polyline points="9 3 9 7 15 7 15 3" />
+                </svg>
+                Capture
+            </button>
+            <button class="sbtn" onclick="downloadModel()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Download
+            </button>
+            <button class="sbtn" onclick="toggleFS()">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" />
+                </svg>
+                <span id="fs-lbl">Fullscreen</span>
+            </button>
+            <button class="sbtn" onclick="shareLink()">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="18" cy="5" r="3" />
+                    <circle cx="6" cy="12" r="3" />
+                    <circle cx="18" cy="19" r="3" />
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                </svg>
+                Share
+            </button>
+        </div>
+    </div>
+
+    <!-- QR MODAL -->
+    <div id="qrbd" onclick="hideQR()">
+        <div id="qrm" onclick="event.stopPropagation()">
+            <div class="qr-logo">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <polygon points="16,2 30,16 16,30 2,16" stroke="#F28D52" stroke-width="1.2"
+                        fill="rgba(242,141,82,0.08)" />
+                    <polygon points="16,9 23,16 16,23 9,16" stroke="#BDD9F2" stroke-width="1"
+                        fill="rgba(189,217,242,0.05)" />
+                </svg>
+                <span class="qr-wordmark">The Aura Standard</span>
+            </div>
+            <div id="qr-eyebrow">Scan to open on mobile</div>
+            <div id="qr-wrap">
+                <div id="qrcode"></div>
+            </div>
+            <p id="qr-url">%%LAN_URL%%</p>
+            <button id="qr-copy" onclick="copyQrUrl()">Copy Link</button>
+            <button id="qr-close" onclick="hideQR()">Close</button>
+        </div>
+    </div>
+
+    <!-- BRANDING STRIP -->
+    <div id="branding">
+        <span class="b-wordmark">The Aura Standard</span>
+        <span class="b-sep">â—†</span>
+        <span class="b-credit">%%ARTIST%%</span>
+    </div>
+
+    <script>
+        var LAN_URL = '%%LAN_URL%%';
+        var GLB_DL = '%%GLB_DL%%';
+        var SESSION_ID = '%%SESSION%%';
+        var mv = document.getElementById('mv');
+        var _panelOn = true, _modelLoaded = false, _arPending = false;
+        var _isMobile = (navigator.maxTouchPoints > 0 || window.innerWidth < 1024);
+
+        /* loader */
+        mv.addEventListener('load', function () {
+            _modelLoaded = true;
+            var l = document.getElementById('loader');
+            l.classList.add('out');
+            setTimeout(function () { l.style.display = 'none'; }, 700);
+            if (_arPending) { _arPending = false; _doAR(); }
+        });
+        setTimeout(function () {
+            _modelLoaded = true;
+            var l = document.getElementById('loader');
+            if (l && l.style.display !== 'none') {
+                l.classList.add('out');
+                setTimeout(function () { l.style.display = 'none'; }, 700);
+            }
+            if (_arPending) { _arPending = false; _doAR(); }
+        }, 9000);
+
+        /* AR */
+        function _doAR() {
+            if (_isMobile) {
+                try { mv.activateAR(); } catch (e) {
+                    toast('Open in Android Chrome or iOS Safari for AR', 6000);
+                }
+            } else { showQR(); toast('Scan with your phone to launch AR', 5000); }
+        }
+        function launchAR() {
+            if (!_modelLoaded) { _arPending = true; toast('Loading\u2026 AR will launch automatically', 4000); return; }
+            _doAR();
+        }
+
+        /* toast */
+        var _tt;
+        function toast(msg, dur) {
+            var t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show'); clearTimeout(_tt);
+            _tt = setTimeout(function () { t.classList.remove('show'); }, dur || 3000);
+        }
+
+        /* panel */
+        function togglePanel() {
+            _panelOn = !_panelOn;
+            document.getElementById('panel').classList.toggle('hidden', !_panelOn);
+            document.getElementById('tog-pts').setAttribute('points',
+                _panelOn ? '18 15 12 9 6 15' : '6 9 12 15 18 9');
+        }
+
+        mv.addEventListener('ar-status', function (e) {
+            var hide = e.detail.status === 'session-started';
+            var show = e.detail.status === 'not-presenting';
+            if (hide) {
+                document.getElementById('panel').classList.add('hidden');
+                document.getElementById('topbar').classList.add('hidden');
+                document.getElementById('branding').classList.add('hidden');
+            }
+            if (show) {
+                if (_panelOn) document.getElementById('panel').classList.remove('hidden');
+                document.getElementById('topbar').classList.remove('hidden');
+                document.getElementById('branding').classList.remove('hidden');
+            }
+            if (e.detail.status === 'failed') {
+                if (_isMobile) toast('AR unavailable \u2014 try Chrome (Android) or Safari (iOS)', 6000);
+                else { showQR(); toast('Scan with your phone to launch AR', 5000); }
+            }
+        });
+
+        /* capture */
+        function capturePhoto() {
+            var fl = document.getElementById('flash');
+            fl.style.opacity = '1'; setTimeout(function () { fl.style.opacity = '0'; }, 80);
+            var url = mv.toDataURL('image/png');
+            var a = document.createElement('a');
+            a.href = url; a.download = 'aura-' + SESSION_ID.slice(0, 8) + '.png';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            toast('Saved to downloads');
+        }
+
+        /* download */
+        function downloadModel() {
+            var a = document.createElement('a');
+            a.href = GLB_DL; a.download = GLB_DL;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            toast('Download started\u2026');
+        }
+
+        /* fullscreen */
+        function toggleFS() {
+            if (!document.fullscreenElement)
+                document.documentElement.requestFullscreen().catch(function () { toast('Fullscreen not available'); });
+            else document.exitFullscreen();
+        }
+        document.addEventListener('fullscreenchange', function () {
+            document.getElementById('fs-lbl').textContent =
+                document.fullscreenElement ? 'Exit' : 'Fullscreen';
+        });
+
+        /* share */
+        function shareLink() {
+            if (navigator.share)
+                navigator.share({ title: '%%SCENE%% \u2014 The Aura Standard', text: 'View in AR', url: LAN_URL }).catch(function () { });
+            else if (navigator.clipboard)
+                navigator.clipboard.writeText(LAN_URL).then(function () { toast('Link copied'); });
+            else prompt('Copy this AR link:', LAN_URL);
+        }
+
+        /* QR */
+        var _qrDone = false;
+        function showQR() {
+            document.getElementById('qrbd').classList.add('show');
+            if (!_qrDone) {
+                new QRCode(document.getElementById('qrcode'), {
+                    text: LAN_URL, width: 200, height: 200,
+                    colorDark: '#000', colorLight: '#fff',
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+                _qrDone = true;
+            }
+        }
+        function hideQR() { document.getElementById('qrbd').classList.remove('show'); }
+        function copyQrUrl() {
+            if (navigator.clipboard) navigator.clipboard.writeText(LAN_URL).then(function () { toast('Link copied'); });
+            else prompt('Copy this link:', LAN_URL);
+        }
+
+        /* keyboard */
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') hideQR();
+            if (e.key === 'f' || e.key === 'F') toggleFS();
+            if (e.key === ' ') togglePanel();
+        });
+    </script>
+
+</body>
+
+</html>

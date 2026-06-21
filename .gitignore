@@ -1,0 +1,12 @@
+
+# Node/Next build artifacts
+frontend/node_modules/
+frontend/.next/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+.env.*

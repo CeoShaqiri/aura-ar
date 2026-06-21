@@ -1,0 +1,215 @@
+{
+  "name": "Aura Legacy Grant — Document Verification + Stripe Link",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "legacy-grant",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "n8n-node-webhook",
+      "name": "Webhook — Legacy Grant",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "legacy-grant"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": false },
+          "conditions": [
+            {
+              "id": "identity-check",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "identity_verified",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "n8n-node-if-verified",
+      "name": "IF — Identity Verified?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.stripe.com/v1/payment_links",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "stripeApi",
+        "sendBody": true,
+        "specifyBody": "keypair",
+        "bodyParameters": {
+          "parameters": [
+            { "name": "line_items[0][price_data][currency]", "value": "usd" },
+            {
+              "name": "line_items[0][price_data][unit_amount]",
+              "value": "4900"
+            },
+            {
+              "name": "line_items[0][price_data][product_data][name]",
+              "value": "Aura Legacy Grant — 25 Exports / Month"
+            },
+            {
+              "name": "line_items[0][price_data][product_data][description]",
+              "value": "24-month plan · 25 secure AR exports per month · Aura Monolith infrastructure"
+            },
+            {
+              "name": "line_items[0][price_data][recurring][interval]",
+              "value": "month"
+            },
+            { "name": "line_items[0][quantity]", "value": "1" },
+            { "name": "after_completion[type]", "value": "redirect" },
+            {
+              "name": "after_completion[redirect][url]",
+              "value": "https://ceo.aura-intelligence.ch/legacy-grant-success"
+            },
+            { "name": "allow_promotion_codes", "value": "false" },
+            { "name": "billing_address_collection", "value": "required" },
+            { "name": "customer_creation", "value": "always" },
+            { "name": "metadata[tier]", "value": "legacy-grant" },
+            {
+              "name": "metadata[email]",
+              "value": "={{ $('Webhook — Legacy Grant').item.json.email }}"
+            },
+            {
+              "name": "metadata[verified_name]",
+              "value": "={{ $('Webhook — Legacy Grant').item.json.extracted_name }}"
+            },
+            { "name": "metadata[source]", "value": "legacy_grant_application" }
+          ]
+        }
+      },
+      "id": "n8n-node-stripe-link",
+      "name": "Stripe — Create Payment Link",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [760, 160]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@aura-intelligence.ch",
+        "toEmail": "={{ $('Webhook — Legacy Grant').item.json.email }}",
+        "subject": "✦ Your Aura Legacy Grant — Payment Link Inside",
+        "emailType": "html",
+        "message": "<!DOCTYPE html><html><body style=\"background:#000;color:#fff;font-family:sans-serif;padding:40px;\"><div style=\"max-width:560px;margin:0 auto;\"><p style=\"color:#c9a84c;font-size:11px;letter-spacing:0.4em;text-transform:uppercase;\">Aura Intelligence · Legacy Grant</p><h1 style=\"font-weight:200;font-size:28px;margin-top:12px;\">Your application is approved.</h1><p style=\"color:rgba(255,255,255,0.4);font-size:14px;line-height:1.7;\">Hi {{ $('Webhook — Legacy Grant').item.json.full_name }},</p><p style=\"color:rgba(255,255,255,0.4);font-size:14px;line-height:1.7;\">Your identity has been verified. Below is your personal Stripe payment link for the Aura Legacy Grant — $49/month for 24 months, giving you 25 secure AR exports per month on the Aura Monolith.</p><div style=\"text-align:center;margin:32px 0;\"><a href=\"{{ $json.url }}\" style=\"background:linear-gradient(135deg,#c9a84c,#f0d080,#c9a84c);color:#000;padding:14px 32px;border-radius:100px;font-size:12px;letter-spacing:0.3em;text-transform:uppercase;text-decoration:none;display:inline-block;\">Activate Your Grant</a></div><p style=\"color:rgba(255,255,255,0.2);font-size:11px;\">This link is personal and non-transferable. Do not share it.</p><hr style=\"border-color:rgba(255,255,255,0.08);margin:24px 0;\" /><p style=\"color:rgba(255,255,255,0.15);font-size:10px;\">Aura Intelligence · ceo.aura-intelligence.ch · hello@aura-intelligence.ch</p></div></body></html>",
+        "options": {}
+      },
+      "id": "n8n-node-email-approved",
+      "name": "Email — Send Approved + Stripe Link",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1020, 160],
+      "credentials": {
+        "smtp": { "id": "smtp-credentials", "name": "Aura SMTP" }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@aura-intelligence.ch",
+        "toEmail": "={{ $('Webhook — Legacy Grant').item.json.email }}",
+        "subject": "Aura Legacy Grant — Application Update",
+        "emailType": "html",
+        "message": "<!DOCTYPE html><html><body style=\"background:#000;color:#fff;font-family:sans-serif;padding:40px;\"><div style=\"max-width:560px;margin:0 auto;\"><p style=\"color:#c9a84c;font-size:11px;letter-spacing:0.4em;text-transform:uppercase;\">Aura Intelligence · Legacy Grant</p><h1 style=\"font-weight:200;font-size:28px;margin-top:12px;\">We could not verify your application.</h1><p style=\"color:rgba(255,255,255,0.4);font-size:14px;line-height:1.7;\">Hi {{ $('Webhook — Legacy Grant').item.json.full_name }},</p><p style=\"color:rgba(255,255,255,0.4);font-size:14px;line-height:1.7;\">Unfortunately your application could not be processed automatically. This may be because the name on your ID could not be matched to the billing name you provided, or because your document could not be read.</p><p style=\"color:rgba(255,255,255,0.4);font-size:14px;line-height:1.7;\">Please re-apply using your full legal name exactly as it appears on your government ID. If you continue to have issues, reply to this email.</p><hr style=\"border-color:rgba(255,255,255,0.08);margin:24px 0;\" /><p style=\"color:rgba(255,255,255,0.15);font-size:10px;\">Aura Intelligence · hello@aura-intelligence.ch</p></div></body></html>",
+        "options": {}
+      },
+      "id": "n8n-node-email-rejected",
+      "name": "Email — Send Rejection",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [760, 440],
+      "credentials": {
+        "smtp": { "id": "smtp-credentials", "name": "Aura SMTP" }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"received\": true } }}"
+      },
+      "id": "n8n-node-respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1280, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#legacy-grant-applications",
+        "text": "🔔 *New Legacy Grant Application*\n\n*Name:* {{ $('Webhook — Legacy Grant').item.json.full_name }}\n*Email:* {{ $('Webhook — Legacy Grant').item.json.email }}\n*Country:* {{ $('Webhook — Legacy Grant').item.json.country }}\n*ID Extracted Name:* {{ $('Webhook — Legacy Grant').item.json.extracted_name }}\n*Status:* {{ $('Webhook — Legacy Grant').item.json.status }}\n*Reason:* {{ $('Webhook — Legacy Grant').item.json.reason }}",
+        "otherOptions": {}
+      },
+      "id": "n8n-node-slack-notify",
+      "name": "Slack — Notify Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [500, 520],
+      "credentials": {
+        "slackApi": { "id": "slack-credentials", "name": "Aura Slack" }
+      },
+      "continueOnFail": true
+    }
+  ],
+  "connections": {
+    "Webhook — Legacy Grant": {
+      "main": [
+        [
+          { "node": "IF — Identity Verified?", "type": "main", "index": 0 },
+          { "node": "Slack — Notify Team", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "IF — Identity Verified?": {
+      "main": [
+        [
+          { "node": "Stripe — Create Payment Link", "type": "main", "index": 0 }
+        ],
+        [{ "node": "Email — Send Rejection", "type": "main", "index": 0 }]
+      ]
+    },
+    "Stripe — Create Payment Link": {
+      "main": [
+        [
+          {
+            "node": "Email — Send Approved + Stripe Link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email — Send Approved + Stripe Link": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    },
+    "Email — Send Rejection": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none",
+    "saveManualExecutions": false,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2026-04-22T00:00:00.000Z",
+      "updatedAt": "2026-04-22T00:00:00.000Z",
+      "id": "aura-legacy-grant",
+      "name": "legacy-grant"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2026-04-22T00:00:00.000Z",
+  "versionId": "1"
+}

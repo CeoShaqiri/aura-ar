@@ -1,0 +1,434 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Aura Standard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --plum: #071526;
+            --navy: #0d1f35;
+            --steel: #5A6B8C;
+            --orange: #F28D52;
+            --blue: #BDD9F2;
+            --white: #F2F2F2;
+            --glass-bg: rgba(90, 107, 140, 0.10);
+            --glass-border: rgba(189, 217, 242, 0.10);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--plum);
+            background-image:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(242, 141, 82, 0.08) 0%, transparent 60%),
+                linear-gradient(rgba(242, 141, 82, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(242, 141, 82, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 80px 80px, 80px 80px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            color: var(--white);
+        }
+
+        /* â”€â”€ Card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .container {
+            max-width: 560px;
+            width: 100%;
+            background: rgba(13, 31, 53, 0.72);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow:
+                0 0 0 1px rgba(242, 141, 82, 0.08),
+                0 40px 100px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(189, 217, 242, 0.06);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* top accent line */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--orange), transparent);
+        }
+
+        /* â”€â”€ Header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .header {
+            padding: 36px 32px 28px;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .logo-diamond {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 30px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--orange) 0%, var(--blue) 60%, var(--orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .header p {
+            font-size: 11px;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: rgba(242, 242, 242, 0.3);
+            margin-top: 8px;
+        }
+
+        /* â”€â”€ Content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .content {
+            padding: 28px 32px 32px;
+        }
+
+        /* Info box */
+        .info-box {
+            background: rgba(242, 141, 82, 0.06);
+            border: 1px solid rgba(242, 141, 82, 0.18);
+            border-left: 3px solid var(--orange);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 24px;
+            font-size: 12px;
+            color: rgba(242, 242, 242, 0.55);
+            line-height: 1.7;
+        }
+
+        .info-box strong {
+            color: var(--orange);
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Model stats table */
+        .model-info {
+            margin-bottom: 24px;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 16px;
+            border-bottom: 1px solid var(--glass-border);
+            font-size: 13px;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: rgba(242, 242, 242, 0.35);
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            color: var(--white);
+            font-weight: 400;
+            font-size: 13px;
+        }
+
+        /* Device badges */
+        .device-support {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .device-badge {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: rgba(242, 242, 242, 0.25);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            transition: all 0.3s ease;
+        }
+
+        .device-badge.active {
+            background: rgba(242, 141, 82, 0.10);
+            border-color: rgba(242, 141, 82, 0.40);
+            color: var(--orange);
+        }
+
+        /* â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--orange) 0%, #e07a3e 100%);
+            color: var(--plum);
+            grid-column: 1 / -1;
+            font-weight: 600;
+            box-shadow: 0 0 0 1px rgba(242, 141, 82, 0.3), 0 8px 30px rgba(242, 141, 82, 0.18);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 1px rgba(242, 141, 82, 0.5), 0 16px 40px rgba(242, 141, 82, 0.28);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: rgba(242, 242, 242, 0.45);
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(189, 217, 242, 0.30);
+            color: var(--white);
+            background: rgba(189, 217, 242, 0.05);
+        }
+
+        .btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        /* â”€â”€ Spinner â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .loader {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 2px solid rgba(242, 242, 242, 0.08);
+            border-top: 2px solid var(--orange);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+        .footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 18px 32px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .footer p {
+            font-size: 10px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(242, 242, 242, 0.18);
+        }
+
+        .footer .brand-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 14px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--orange), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.02em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <div class="header-logo">
+                <svg class="logo-diamond" viewBox="0 0 40 40" fill="none">
+                    <polygon points="20,2 38,20 20,38 2,20" stroke="#F28D52" stroke-width="1.5"
+                        fill="rgba(242,141,82,0.08)" />
+                </svg>
+                <h1>The Aura Standard</h1>
+            </div>
+            <p>Augmented Reality &middot; Powered by Blender</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+
+            <div class="info-box">
+                <strong>How to view your model in AR</strong>
+                &middot; Open this link on your mobile device<br>
+                &middot; Tap Launch AR and point camera at a flat surface<br>
+                &middot; Your model appears in real space
+            </div>
+
+            <div class="model-info">
+                <div class="info-item">
+                    <span class="info-label">Model</span>
+                    <span class="info-value" id="modelName">Loading&hellip;</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Format</span>
+                    <span class="info-value">glTF Binary (GLB)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Quality</span>
+                    <span class="info-value" id="modelQuality">&mdash;</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">File Size</span>
+                    <span class="info-value" id="modelSize">&mdash;</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Vertices</span>
+                    <span class="info-value" id="vertexCount">&mdash;</span>
+                </div>
+            </div>
+
+            <div class="device-support">
+                <div class="device-badge active">Android</div>
+                <div class="device-badge active">iOS</div>
+                <div class="device-badge">Desktop</div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn btn-primary" id="launchARBtn" onclick="launchAR()">
+                    &#x25C6; &nbsp; Launch AR
+                </button>
+                <button class="btn btn-secondary" onclick="downloadModel()">
+                    Download
+                </button>
+                <button class="btn btn-secondary" onclick="shareModel()">
+                    Share Link
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <span class="brand-name">The Aura Standard</span>
+            <p>Created with Blender &middot; One click to AR</p>
+        </div>
+
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const modelId = params.get('model') || 'sample';
+        const modelUrl = `/models/${ modelId }.glb`;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadModelInfo();
+            checkARSupport();
+        });
+
+        function loadModelInfo() {
+            document.getElementById('modelName').textContent = 'Your AR Model';
+            document.getElementById('modelQuality').textContent = '85%';
+            document.getElementById('modelSize').textContent = '2.4 MB';
+            document.getElementById('vertexCount').textContent = '45,234';
+        }
+
+        function checkARSupport() {
+            const isAndroid = /Android/.test(navigator.userAgent);
+            const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+            if (!isAndroid && !isIOS) {
+                document.querySelector('.device-badge:nth-child(3)').classList.add('active');
+            }
+        }
+
+        function launchAR() {
+            alert('&#x25C6; AR Launch\n\nWebXR session starting&hellip;\nModel: ' + modelUrl + '\nPoint your camera at a flat surface.');
+        }
+
+        function downloadModel() {
+            alert('Downloading model&hellip;\nFile: model.glb');
+        }
+
+        function shareModel() {
+            const shareUrl = window.location.href;
+            if (navigator.share) {
+                navigator.share({ title: 'The Aura Standard', text: 'View my AR model', url: shareUrl });
+            } else {
+                navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied to clipboard.'));
+            }
+        }
+    </script>
+</body>
+
+</html>

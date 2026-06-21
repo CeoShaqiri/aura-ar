@@ -1,0 +1,141 @@
+"""
+QUICK REFERENCE CARD FOR USERS
+Print or bookmark this!
+"""
+
+╔════════════════════════════════════════════════════════════════╗
+║           WEBXR AR EXPORTER - QUICK REFERENCE v1.2             ║
+║                    For Blender 4.0+                             ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║  📍 FINDING THE AR WORKSPACE                                   ║
+║  ─────────────────────────────────────────────────────────────  ║
+║  After installing the addon, you'll see:                       ║
+║                                                                 ║
+║  Top Menu Bar:                                                 ║
+║  ┌──────────────────────────────────────────────────────┐     ║
+║  │ Layout │ Modeling │ Sculpting │ ... │ AR ← CLICK ME! │     ║
+║  └──────────────────────────────────────────────────────┘     ║
+║                                                                 ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║  🎮 AR DASHBOARD LAYOUT                                        ║
+║  ─────────────────────────────────────────────────────────────  ║
+║                                                                 ║
+║  ┌─────────────────────────┐                                   ║
+║  │ 🚀 DEPLOY TO AR (main)  │  Biggest button                   ║
+║  │ Click to export         │                                   ║
+║  └─────────────────────────┘                                   ║
+║                                                                 ║
+║  Quick Actions:                                                ║
+║  [Preview] [Check] [Optimize] [Materials]                      ║
+║                                                                 ║
+║  Scene Status:                                                 ║
+║  📦 Objects | 🔺 Vertices | ✓ Selected                        ║
+║                                                                 ║
+║  Export Settings:                                              ║
+║  Quality ──────━●━─ (drag slider)                             ║
+║  Format: glTF Binary ▼                                         ║
+║  Textures: Medium ▼                                            ║
+║  ☑ Optimize Mesh                                               ║
+║                                                                 ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║  ⚡ QUICK BUTTONS GUIDE                                        ║
+║  ─────────────────────────────────────────────────────────────  ║
+║                                                                 ║
+║  [Preview]   → See AR-ready material appearance               ║
+║  [Check]     → Validate scene (polygon count, materials)      ║
+║  [Optimize]  → Reduce polygon count automatically             ║
+║  [Materials] → Simplify all materials                         ║
+║                                                                 ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║  ⚙️ RECOMMENDED SETTINGS                                       ║
+║  ─────────────────────────────────────────────────────────────  ║
+║                                                                 ║
+║  Quality:          85% (good balance)                          ║
+║  Format:           glTF Binary (GLB) ✓                         ║
+║  Textures:         Medium (1024px) ✓                           ║
+║  Optimize Mesh:    ☑ Checked (for AR)                         ║
+║  Bake Lighting:    ☑ For consistent look                       ║
+║                                                                 ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║  🚀 TYPICAL WORKFLOW                                           ║
+║  ─────────────────────────────────────────────────────────────  ║
+║                                                                 ║
+║  1. Model your 3D object (use any workspace)                  ║
+║  2. Switch to AR workspace (click "AR" tab)                   ║
+║  3. Click [Check] to validate                                 ║
+║  4. Adjust settings if needed (usually ready as-is)           ║
+║  5. Click 🚀 DEPLOY TO AR                                     ║
+║  6. Wait for "✅ Export completed" message                    ║
+║  7. Find your .glb file in Blender folder                     ║
+║                                                                 ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║  ⚠️ COMMON ISSUES & FIXES                                      ║
+║  ─────────────────────────────────────────────────────────────  ║
+║                                                                 ║
+║  "Scene is empty"?                                             ║
+║  → Add objects to your scene                                   ║
+║                                                                 ║
+║  Too many polygons?                                            ║
+║  → Click [Optimize] button                                     ║
+║                                                                 ║
+║  Low quality result?                                           ║
+║  → Increase Quality slider or change Textures to "High"        ║
+║                                                                 ║
+║  Export fails?                                                 ║
+║  → Enable Debug Mode in Advanced Settings, check console       ║
+║                                                                 ║
+║  Can't find AR tab?                                            ║
+║  → Check Edit > Preferences > Add-ons for "WebXR" (enabled?)   ║
+║  → Restart Blender                                             ║
+║                                                                 ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║  📊 SCENE VALIDATION                                           ║
+║  ─────────────────────────────────────────────────────────────  ║
+║                                                                 ║
+║  Click [Check] button to see:                                  ║
+║                                                                 ║
+║  ✅ All Good!                                                  ║
+║     Scene ready for export                                     ║
+║                                                                 ║
+║  ⚠️ Warnings:                                                  ║
+║     • No textured materials (still exports, but no colors)     ║
+║     • High polygon count (will be slow on AR devices)          ║
+║     • Non-standard unit scale                                  ║
+║                                                                 ║
+║  ❌ Errors:                                                    ║
+║     • Scene is empty → Add objects                             ║
+║                                                                 ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║  💡 TIPS FOR BEST AR RESULTS                                   ║
+║  ─────────────────────────────────────────────────────────────  ║
+║                                                                 ║
+║  ✓ Keep polygons under 500K (use Optimize if needed)          ║
+║  ✓ Use PBR materials (Metallic, Roughness, Normal maps)       ║
+║  ✓ Test on actual mobile device before releasing              ║
+║  ✓ Use Medium texture quality (balances quality & size)        ║
+║  ✓ Name your objects clearly (for debugging)                  ║
+║  ✓ Bake lighting for consistent AR appearance                 ║
+║                                                                 ║
+╠════════════════════════════════════════════════════════════════╣
+║                                                                 ║
+║  🔗 NEED HELP?                                                 ║
+║  ─────────────────────────────────────────────────────────────  ║
+║                                                                 ║
+║  • Full Guide: See INSTALLATION_GUIDE.md in addon folder       ║
+║  • Console Logs: View > Toggle System Console for errors       ║
+║  • Debug Mode: Advanced Settings > Enable Debug Mode           ║
+║  • Issues: Check GitHub repository for support                 ║
+║                                                                 ║
+╚════════════════════════════════════════════════════════════════╝
+
+VERSION: 1.2 (AR Edition)
+BLENDER: 4.0+
+AUTHOR: Aura-Intelligence
