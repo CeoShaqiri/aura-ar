@@ -1,0 +1,41 @@
+name: Blender Addon Package
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package-addon:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Build addon zip
+        run: |
+          python build_addon.py
+          mkdir -p dist
+          cp ../aura_technologies_ar.zip dist/aura_technologies_ar.zip
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura_technologies_ar
+          path: dist/aura_technologies_ar.zip
+
+      - name: Create GitHub release with zip
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/aura_technologies_ar.zip
