@@ -35,3 +35,16 @@ Scan the QR code with any phone
 The model appears placed in the real room via the phone's native AR view (no app install — works through the browser)
 Film it directly for social content
 # aura-ar
+
+## Install on a New Blender Machine
+
+1. Open the GitHub repository: https://github.com/CeoShaqiri/aura-ar
+2. Go to **Releases** and download `aura_technologies_ar.zip` from the latest release assets.
+3. In Blender, open **Edit > Preferences > Add-ons > Install...**
+4. Select the downloaded zip file.
+5. Enable the add-on in the Add-ons list.
+
+## Release Automation
+
+- A GitHub Actions workflow builds and attaches `aura_technologies_ar.zip` when a tag like `v1.0.0` is pushed.
+- You can also run the workflow manually from the **Actions** tab.
