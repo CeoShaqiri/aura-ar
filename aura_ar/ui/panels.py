@@ -566,12 +566,6 @@ class WEBXR_PT_quick_access(Panel):
                         text="  Create AR Workspace")
         layout.separator(factor=0.6)
 
-    try:
-        from ..operators.export import _detect_addons
-        return _detect_addons()
-    except Exception:
-        return {}
-
 
 def _read_deploy_log():
     """Load the deployment log JSON; return [] if missing or corrupt."""
